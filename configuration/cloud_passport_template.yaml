@@ -1,23 +1,23 @@
 ---
-cloud_api_host: {{ collector.cloud.api_host }}
-cloud_api_port: {{ collector.cloud.api_port }}
-cloud_deploy_token: {{ collector.cloud.deploy_token }}
-cloud_public_host: {{ collector.cloud.public_host }}
-cloud_private_host: {{ collector.cloud.private_host }}
-cloud_dashboard_url: {{ collector.dashboard.service }}
-cloud_protocol: {{ collector.cloud.protocol }}
-grafana_ui_url: {{ collector.monitoring.service }}
-consul_url: {{ collector.consul.internal }}
-consul_public_url: {{ collector.consul.service }}
-consul_admin_token: {{ secrets('collector.consul.token') }}
-zookeeper_address: {{ collector.zookeeper.internal }}
-monitoring_enabled: {{ collector.monitoring.monitoring_enabled }}
-consul_enabled: {{ collector.monitoring.consul_enabled }}
-arango_db_hostname: {{ collector.arangodb.host_name }}
-arango_db_password: {{ secrets('collector.arangodb.root_password') }}
-arango_db_port: {{ collector.arangodb.port }}
-arango_db_username: {{ secrets('collector.arangodb.root_user') }}
-clickhouse_db_hostname: {{ collector.clickhouse.host_name }}
-clickhouse_db_password: {{ secrets('collector.clickhouse.password') }}
-clickhouse_db_port: {{ collector.clickhouse.port }}
-clickhouse_db_username: {{ secrets('collector.clickhouse.username') }}
+cloud_api_host: { { collector.cloud.api_host } }
+cloud_api_port: { { collector.cloud.api_port } }
+cloud_deploy_token: { { collector.cloud.deploy_token } }
+cloud_public_host: { { collector.cloud.public_host } }
+cloud_private_host: { { collector.cloud.private_host } }
+cloud_dashboard_url: { { collector.dashboard.service } }
+cloud_protocol: { { collector.cloud.protocol } }
+grafana_ui_url: { { collector.monitoring.service } }
+consul_url: { { collector.consul.internal } }
+consul_public_url: { { collector.consul.service } }
+consul_admin_token: { { secrets('collector.consul.token') } }
+zookeeper_address: { { collector.zookeeper.internal } }
+monitoring_enabled: { { collector.monitoring.monitoring_enabled } }
+consul_enabled: { { collector.monitoring.consul_enabled } }
+arango_db_hostname: { { collector.arangodb.host_name } }
+arango_db_password: { { secrets('collector.arangodb.root_password') } }
+arango_db_port: { { collector.arangodb.port } }
+arango_db_username: { { secrets('collector.arangodb.root_user') } }
+clickhouse_db_hostname: { { collector.clickhouse.host_name } }
+clickhouse_db_password: { { secrets('collector.clickhouse.password') } }
+clickhouse_db_port: { { collector.clickhouse.port } }
+clickhouse_db_username: { { secrets('collector.clickhouse.username') } }
