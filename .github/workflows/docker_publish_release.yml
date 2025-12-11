@@ -1,0 +1,91 @@
+name: "Release: Cloud Passport CLI"
+
+run-name: "Release Cloud Passport CLI: ${{ inputs.version }}"
+
+env:
+  REGISTRY: ghcr.io
+  CI_PROJECT_DIR: ${{ github.workspace }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        default: '1.0.0'
+        type: string
+        description: 'Release version (e.g., 1.0.0)'
+      publish:
+        required: false
+        default: true
+        type: boolean
+        description: 'Publish the release'
+
+jobs:
+  check-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Input parameters
+        run: |
+          echo "Version: ${{ github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check if tag exists
+        id: check_tag
+        uses: netcracker/qubership-workflow-hub/actions/tag-checker@v1.0.3
+        with:
+          tag: 'v${{ github.event.inputs.version }}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Output result
+        run: |
+          echo "Tag exists: ${{ steps.check_tag.outputs.exists }}"
+          echo "Tag name: v${{ github.event.inputs.version }}"
+
+      - name: Fail if tag exists
+        if: steps.check_tag.outputs.exists == 'true'
+        run: |
+          echo "Tag already exists: v${{ github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "Tag already exists: v${{ github.event.inputs.version }}"
+          exit 1
+
+  tag:
+    needs: [check-tag]
+    uses: netcracker/qubership-workflow-hub/.github/workflows/tag-creator.yml@v1.0.3
+    with:
+      tag-name: v${{ github.event.inputs.version }}
+
+  build-cloud-passport-cli:
+    needs: [tag]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    outputs:
+      custom_tag: ${{ steps.build-cloud-passport-cli.outputs.custom_tag }}
+      branch_tag: ${{ steps.build-cloud-passport-cli.outputs.branch_tag }}
+      timestamp: ${{ steps.build-cloud-passport-cli.outputs.timestamp }}
+      branch_latest_tag: ${{ steps.build-cloud-passport-cli.outputs.branch_latest_tag }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build Qubership PipeGene Docker Image
+      uses: ./.github/actions/build-cloud-passport-cli
+      id: build-cloud-passport-cli
+      with:
+        registry: ${{ env.REGISTRY }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        version: ${{ inputs.version }}
+
+  github-release:
+    needs:
+      - build-cloud-passport-cli
+    uses: netcracker/qubership-workflow-hub/.github/workflows/release-drafter.yml@v2.0.5
+    with:
+      version: ${{ github.event.inputs.version }}
+      publish: ${{ github.event.inputs.publish }}
