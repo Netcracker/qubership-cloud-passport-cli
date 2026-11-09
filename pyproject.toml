@@ -22,7 +22,7 @@ jmespath = "^1.0.1"
 cloud_passport_cli = "cloud_passport_cli.__main__:main"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^6.0.0"
+pytest = "^9.0.0"
 
 [build-system]
 requires = ["poetry-core"]
